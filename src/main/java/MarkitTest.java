@@ -1,38 +1,49 @@
 /**
  * Created with IntelliJ IDEA.
+ * Playing around with Markit On Demand API
  * User: stallworthpaul
  * Date: 9/19/13
  * Time: 11:33 AM
- * To change this template use File | Settings | File Templates.
  */
 
 import com.google.gson.Gson;
-import spark.Request;
-import spark.Response;
-import spark.Route;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 
-import static spark.Spark.get;
+import static spark.Spark.*;
+import spark.*;
 
 public class MarkitTest {
 
     public static final String REST_ENDPOINT = "http://dev.markitondemand.com/Api/Quote";
-    public static final String sSymbol = "CSCO";
-    public static Gson gson = new Gson();
+    public static final String[] mySymbols = {"CSCO", "SWHC", "GOOG", "ALDW", "XLP"};
+    public static ArrayList<StockQuote> stockList = new ArrayList<StockQuote>();
 
     public static void main(String[] args) {
-        get (new Route("/") {
+        get(new Route("/") {
             @Override
             public Object handle(Request request, Response response) {
                 response.type("text/plain");
-                return getQuote(sSymbol);
+                for (String item : mySymbols) {
+                    StockQuote q = getQuote(item);
+                    //myStocks.put(item, q);
+                    stockList.add(q);
+                }
+                StringBuilder resp = new StringBuilder();
+
+                for (StockQuote aStockList : stockList) {
+                    resp.append(aStockList.Data.Symbol).append(" ").append(aStockList.Data.LastPrice).append("\n");
+                }
+
+                return resp.toString();
+
             }
         });
     }
 
-    public static String getQuote(String symbol) {
+    public static StockQuote getQuote(String symbol) {
         String endpoint = REST_ENDPOINT + "/json?symbol=" + symbol;
 
         try {
@@ -43,20 +54,22 @@ public class MarkitTest {
 
             java.io.BufferedReader rd = new BufferedReader(new InputStreamReader((request.getInputStream())));
             StringBuilder response = new StringBuilder();
-            String line = null;
+            String line;
+            Gson gson = new Gson();
 
-            StockQuote quote = new StockQuote();
             while ((line = rd.readLine()) != null) {
-                gson.toJson(line);
                 response.append(line);
             }
 
-            quote = gson.fromJson(response.toString(), StockQuote.class);
-            //now return the quote class and try to access its members
-            return response.toString();
+            line = response.toString();
+            StockQuote quote = gson.fromJson(line, StockQuote.class);
+
+            return (quote);
 
         } catch (Exception e) {
-            return "Exceptional!";
+            System.out.println("Cause: " + e.getCause());
+            System.out.println("Message: " + e.getMessage());
+            return (new StockQuote());
         }
 
     }
