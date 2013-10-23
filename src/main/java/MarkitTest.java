@@ -33,9 +33,8 @@ public class MarkitTest {
                 }
                 StringBuilder resp = new StringBuilder();
 
-                for (StockQuote aStockList : stockList) {
-                    resp.append(aStockList.Data.Symbol).append(" ").append(aStockList.Data.LastPrice).append("\n");
-                }
+                for (StockQuote aStockList : stockList)
+                    resp.append(aStockList.DATA.Symbol).append(" ").append(aStockList.DATA.LastPrice).append("\n");
 
                 return resp.toString();
 
