@@ -6,11 +6,11 @@
  */
 public class StockQuote {
 
-    protected DATA Data;
+    protected Data DATA;
 
     @Override
     public String toString() {
-        return "Quote: " + Data;
+        return "Quote: " + DATA;
     }
 
     StockQuote() {
