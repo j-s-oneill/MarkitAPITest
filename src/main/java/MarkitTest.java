@@ -22,6 +22,7 @@ public class MarkitTest {
     public static ArrayList<StockQuote> stockList = new ArrayList<StockQuote>();
 
     public static void main(String[] args) {
+        setPort(Integer.parseInt(System.getenv("PORT")));
         get(new Route("/") {
             @Override
             public Object handle(Request request, Response response) {
