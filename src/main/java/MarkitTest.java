@@ -23,8 +23,12 @@ public class MarkitTest {
 
     public static void main(String[] args) {
 
-        if (System.getenv("ON_HEROKU").equals("Yes"))
-            setPort(Integer.parseInt(System.getenv("PORT")));
+        try {
+            if (System.getenv("ON_HEROKU").equals("Yes"))
+                setPort(Integer.parseInt(System.getenv("PORT")));
+        } catch (NullPointerException e) {
+            //trap the error but no action needed
+        }
 
         get(new Route("/") {
             @Override
