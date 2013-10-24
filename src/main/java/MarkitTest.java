@@ -22,20 +22,25 @@ public class MarkitTest {
     public static ArrayList<StockQuote> stockList = new ArrayList<StockQuote>();
 
     public static void main(String[] args) {
-        setPort(Integer.parseInt(System.getenv("PORT")));
+
+        if (System.getenv("ON_HEROKU").equals("Yes"))
+            setPort(Integer.parseInt(System.getenv("PORT")));
+
         get(new Route("/") {
             @Override
             public Object handle(Request request, Response response) {
                 response.type("text/plain");
+
                 for (String item : mySymbols) {
                     StockQuote q = getQuote(item);
                     //myStocks.put(item, q);
                     stockList.add(q);
                 }
+
                 StringBuilder resp = new StringBuilder();
 
                 for (StockQuote aStockList : stockList)
-                    resp.append(aStockList.DATA.Symbol).append(" ").append(aStockList.DATA.LastPrice).append("\n");
+                    resp.append(aStockList.Data.Symbol).append(" ").append(aStockList.Data.LastPrice).append("\n");
 
                 return resp.toString();
 

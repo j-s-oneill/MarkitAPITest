@@ -4,7 +4,7 @@
  * Date: 9/24/13
  * Time: 11:39 AM
  */
-public class Data {
+public class DATA {
 
     protected String Status;
     protected String Name;
@@ -26,5 +26,5 @@ public class Data {
         return this.Symbol + " : " + this.LastPrice;
     }
 
-    Data() { }
+    DATA() { }
 }
